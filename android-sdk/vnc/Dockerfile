@@ -4,7 +4,7 @@
 
 # Base image
 # ---------------------------------------------------------------------- #
-FROM thyrlian/android-sdk:latest
+FROM plenuspyramis/android-sdk:latest
 
 # Author
 # ---------------------------------------------------------------------- #
