@@ -43,6 +43,7 @@ alias android-docker-start="sudo docker run -d --name $ANDROID_DOCKER_CONTAINER 
 alias android-docker-stop="sudo docker stop $ANDROID_DOCKER_CONTAINER"
 alias android-docker-destroy="sudo docker rm -f $ANDROID_DOCKER_CONTAINER"
 alias android-docker-shell="sudo docker exec -it $ANDROID_DOCKER_CONTAINER /bin/bash"
+alias android-docker-vnc="if ! which vncviewer > /dev/null; then echo 'You must install vncviewer' && exit 1; else vncviewer 127.0.0.1:1; fi"
 ```
 
 ### Command reference:
@@ -51,4 +52,4 @@ alias android-docker-shell="sudo docker exec -it $ANDROID_DOCKER_CONTAINER /bin/
  * `android-docker-start` - Create/Start container
  * `android-docker-stop` - Stop container
  * `android-docker-shell` - Connect to a shell for the running container
- 
+ * `android-docker-vnc` - Connect to the vnc server running in the container (must have `vncviewer` installed on host.)
