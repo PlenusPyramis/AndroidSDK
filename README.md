@@ -9,6 +9,20 @@ What follows is abbreviated steps to install/start/stop/destroy the
 [plenuspyramis/android-sdk](https://hub.docker.com/r/plenuspyramis/android-sdk)
 docker container.
 
+## Deviations from upstream
+
+The Dockefile is rebuilt to run as the `android` user instead of `root`. Sudo
+priviliges are granted, so you can still do everything you used to do as root.
+This fixes file permissions for sharing files between the host and container.
+
+If your user account on the host is different than `1000` (the default first
+user account on any system; check by running `echo $UID`) you can rebuild the
+container image to use a custom `USER_ID` build argument:
+
+```
+sudo docker build -t plenuspyramis/android-sdk --build-arg USER_ID=$UID android-sdk
+```
+
 ## Setup
 
 This wraps all the docker commands into reusable bash aliases.

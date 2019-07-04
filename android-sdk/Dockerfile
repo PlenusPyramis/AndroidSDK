@@ -8,7 +8,7 @@ FROM ubuntu:18.04
 
 # Author
 # ---------------------------------------------------------------------- #
-LABEL maintainer "thyrlian@gmail.com"
+LABEL maintainer "ryan@enigmacurry.com"
 
 # support multiarch: i386 architecture
 # install Java
@@ -87,4 +87,13 @@ RUN apt-get update -y && \
     (rm /tmp/*.pub 2> /dev/null || true)
 
 ADD supervisord.conf /etc/supervisor/conf.d/
-CMD ["/usr/bin/supervisord"]
+
+# Run as a regular user (with sudo privs) instead of root all the time:
+## ----------------------------------------
+ARG USER_ID=1000
+RUN apt-get update && \
+    apt-get install -y sudo && \
+    echo "android ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/99_android_nopasswd && \
+    adduser android --uid ${USER_ID} --gecos GECOS --shell /bin/bash --disabled-password --home /home/android
+USER android
+CMD ["sudo", "/usr/bin/supervisord"]
