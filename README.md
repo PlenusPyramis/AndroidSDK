@@ -13,21 +13,27 @@ docker container.
 
 ## Setup
 
-This wraps all the docker commands into reusable bash aliases.
+ * Download and install [android-studio](https://developer.android.com/studio/).
+You will use Android Studio to download SDKs to the default directory on your
+host: `$HOME/Android/Sdk`. This directory will be mounted into the docker
+container at `/sdk` (read-only) so as to share the same SDKs as you have on your
+host.
 
-Ensure your user account has `sudo` priviliges.
-
-Put this in your `$HOME/.bashrc`. Ensure you change `ANDROID_DOCKER` to a real
-path on your host where you have this repository cloned:
+ * Ensure your user account has `sudo` priviliges.
+ 
+ * Put this in your `$HOME/.bashrc`. This wraps all the docker commands into
+reusable bash aliases. Ensure you change `ANDROID_DOCKER` to a real path on your
+host where you have this repository cloned:
 
 ```
 # Android Docker Config:
-# https://www.github.com/PlenusPyramis/AndroidSDK
+# https://www.github.com/plenuspyramis/AndroidSDK
+## Set ANDROID_DOCKER to your clone of plenuspyramis/AndroidSDK
 export ANDROID_DOCKER=$HOME/git/vendor/plenuspyramis/AndroidSDK
 export ANDROID_DOCKER_IMAGE=plenuspyramis/android-sdk
 export ANDROID_DOCKER_CONTAINER=android-docker
-alias android-docker-create-sdk-cache='sudo docker run --rm -it -v $ANDROID_DOCKER/sdk:/sdk $ANDROID_DOCKER_IMAGE bash -c "sudo cp -a /opt/android-sdk/. /sdk && sudo chown -R android:android /sdk"'
-alias android-docker-start="if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_DOCKER/sdk:/sdk -v $ANDROID_DOCKER/gradle_caches:/home/android/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;"
+export ANDROID_STUDIO_SDK=$HOME/Android/Sdk
+alias android-docker-start="if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_STUDIO_SDK:/sdk:ro -v $ANDROID_DOCKER/gradle_caches:/home/android/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;"
 alias android-docker-stop='sudo docker stop $ANDROID_DOCKER_CONTAINER'
 alias android-docker-destroy='sudo docker rm $ANDROID_DOCKER_CONTAINER'
 alias android-docker-shell='sudo docker exec -it $ANDROID_DOCKER_CONTAINER /bin/bash'
@@ -37,10 +43,6 @@ alias android-docker-vnc='if ! which vncviewer > /dev/null; then echo "You must 
 Once you have saved `$HOME/.bashrc`, restart your terminal to reload it.
 
 ### Command reference:
-
- * `android-docker-create-sdk-cache` - Create the SDK cache directory and copy
-   the pre-downloaded SDK (inside the container image) to the host path
-   `$ANDROID_DOCKER/sdk`. You only need to do this once.
 
  * `android-docker-start` - Start/Create the `android-docker` container. (The
    name is configurable by setting `ANDROID_DOCKER_CONTAINER`, see above.)
@@ -56,10 +58,6 @@ Once you have saved `$HOME/.bashrc`, restart your terminal to reload it.
 
  * `android-docker-destroy` - destroy the stopped container. (add `-f` to stop
    and destroy the running container.)
-
-## Android development mini-tutorial
-
-
 
 ## Building images
 

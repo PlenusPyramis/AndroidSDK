@@ -1,5 +1,5 @@
 # SDK host directory (to be mounted into container)
-sdk/
+sdk
 authorized_keys
 
 ### Certificate ###
