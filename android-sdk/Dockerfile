@@ -4,7 +4,7 @@
 
 # Base image
 # ---------------------------------------------------------------------- #
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as base
 
 # Author
 # ---------------------------------------------------------------------- #
@@ -99,4 +99,32 @@ RUN apt-get update && \
     chown -R android:android /sdk && \
     echo 'export PATH=/sdk/tools/bin:$PATH' >> /home/android/.bashrc
 USER android
+CMD ["sudo", "/usr/bin/supervisord"]
+
+
+# ====================================================================== #
+# Android SDK Docker Image (VNC enabled)
+# ====================================================================== #
+FROM base
+LABEL maintainer "ryan@enigmacurry.com"
+
+# install and configure VNC server
+ARG VNC_PASSWORD="android"
+ARG VNC_PASSWORD_VIEW_ONLY="docker"
+ENV USER android
+ENV DISPLAY :1
+EXPOSE 5901
+ADD vnc/vncpass.sh /tmp/
+ADD vnc/watchdog.sh /usr/local/bin/
+ADD vnc/supervisord_vncserver.conf /etc/supervisor/conf.d/
+RUN sudo apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y --no-install-recommends xfce4 xfce4-goodies xfonts-base dbus-x11 tightvncserver expect && \
+    sudo chmod +x /tmp/vncpass.sh; sudo sync && \
+    VNC_PASSWORD=${VNC_PASSWORD} VNC_PASSWORD_VIEW_ONLY=${VNC_PASSWORD_VIEW_ONLY} /tmp/vncpass.sh && \
+    sudo rm /tmp/vncpass.sh && \
+    sudo apt-get remove -y expect && sudo apt-get autoremove -y && \
+    mkdir -p /home/android/.ssh && \
+    FILE_SSH_ENV="/home/android/.ssh/environment" && \
+    echo "DISPLAY=:1" >> $FILE_SSH_ENV
+
 CMD ["sudo", "/usr/bin/supervisord"]
