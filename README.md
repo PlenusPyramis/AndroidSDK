@@ -19,7 +19,7 @@ path on your host where you would like to store the container files:
 ```
 # Android Docker Config:
 # github.com/PlenusPyramis/AndroidSDK
-export ANDROID_DOCKER=$HOME/git/vendor/plenuspyramis/AndroidSDK/env
+export ANDROID_DOCKER=$HOME/git/vendor/plenuspyramis/AndroidSDK
 export ANDROID_DOCKER_IMAGE=plenuspyramis/android-sdk:latest-vnc
 export ANDROID_DOCKER_CONTAINER=android-docker
 
@@ -35,12 +35,22 @@ alias android-docker-vnc='if ! which vncviewer > /dev/null; then echo "You must 
 
 ### Command reference:
 
- * `android-docker-create-sdk-cache` - Create the SDK cache directory and copy the pre-downloaded SDK (inside the container image) to the host path `$ANDROID_DOCKER/sdk`. You need to do this only once.
- * `android-docker-start` - Create/Start container
- * `android-docker-stop` - Stop container
- * `android-docker-shell` - Connect to a shell for the running container
+ * `android-docker-create-sdk-cache` - Create the SDK cache directory and copy
+   the pre-downloaded SDK (inside the container image) to the host path
+   `$ANDROID_DOCKER/sdk`. You only need to do this once.
+
+ * `android-docker-start` - Start/Create the `android-docker` container. (The
+   name is configurable by setting `ANDROID_DOCKER_CONTAINER`, see above.)
+
+ * `android-docker-stop` - Stop the container.
+
+ * `android-docker-shell` - Connect to a shell inside the running container.
+
  * `android-docker-vnc` - Connect to the vnc server running in the container
    (must have `vncviewer` installed on host.) Default password is `android`.
+
+ * `android-docker-destroy` - destroy the stopped container. (add `-f` to stop
+   and destroy the running container.)
 
 ## Building images
 

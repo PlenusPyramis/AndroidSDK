@@ -96,6 +96,7 @@ RUN apt-get update && \
     echo "android ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/99_android_nopasswd && \
     adduser android --uid ${USER_ID} --gecos GECOS --shell /bin/bash --disabled-password --home /home/android && \
     mkdir /sdk && \
-    chown -R android:android /sdk
+    chown -R android:android /sdk && \
+    echo 'export PATH=/sdk/tools/bin:$PATH' >> /home/android/.bashrc
 USER android
 CMD ["sudo", "/usr/bin/supervisord"]
