@@ -97,7 +97,7 @@ RUN apt-get update && \
     adduser android --uid ${USER_ID} --gecos GECOS --shell /bin/bash --disabled-password --home /home/android && \
     mkdir /sdk && \
     chown -R android:android /sdk && \
-    echo 'export PATH=/sdk/tools/bin:$PATH' >> /home/android/.bashrc
+    echo 'export PATH=/sdk/tools:/sdk/tools/bin:$PATH' >> /home/android/.bashrc
 USER android
 CMD ["sudo", "/usr/bin/supervisord"]
 
