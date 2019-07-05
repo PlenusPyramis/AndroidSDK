@@ -1,6 +1,8 @@
 # PlenusPyramis Android SDK in Docker
 
 This is a fork of [thyrlian/AndroidSDK](https://github.com/thyrlian/AndroidSDK).
+This sets up an environment to develop and build android apps inside of a
+preconfigured docker container.
 
 This README is a supplement to the original, which has been copied to
 [README-UPSTREAM.md](README-UPSTREAM.md)
@@ -13,25 +15,24 @@ docker container.
 
 This wraps all the docker commands into reusable bash aliases.
 
-Put this in your `$HOME/.bashrc`. Ensure you change ANDROID_DOCKER to a real
-path on your host where you would like to store the container files:
+Put this in your `$HOME/.bashrc`. Ensure you change `ANDROID_DOCKER` to a real
+path on your host where you have this repository cloned:
 
 ```
 # Android Docker Config:
-# github.com/PlenusPyramis/AndroidSDK
+# https://www.github.com/PlenusPyramis/AndroidSDK
 export ANDROID_DOCKER=$HOME/git/vendor/plenuspyramis/AndroidSDK
 export ANDROID_DOCKER_IMAGE=plenuspyramis/android-sdk:latest-vnc
 export ANDROID_DOCKER_CONTAINER=android-docker
-
 alias android-docker-create-sdk-cache='sudo docker run --rm -it -v $ANDROID_DOCKER/sdk:/sdk $ANDROID_DOCKER_IMAGE bash -c "sudo cp -a /opt/android-sdk/. /sdk && sudo chown -R android:android /sdk"'
-
-alias android-docker-start="if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_DOCKER/sdk:/sdk -v $ANDROID_DOCKER/gradle_caches:/root/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;"
-
+alias android-docker-start="if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_DOCKER/sdk:/sdk -v $ANDROID_DOCKER/gradle_caches:/home/android/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;"
 alias android-docker-stop='sudo docker stop $ANDROID_DOCKER_CONTAINER'
 alias android-docker-destroy='sudo docker rm $ANDROID_DOCKER_CONTAINER'
 alias android-docker-shell='sudo docker exec -it $ANDROID_DOCKER_CONTAINER /bin/bash'
 alias android-docker-vnc='if ! which vncviewer > /dev/null; then echo "You must install vncviewer" && exit 1; else vncviewer 127.0.0.1:1; fi'
 ```
+
+Once you have saved `$HOME/.bashrc`, restart your terminal to reload it.
 
 ### Command reference:
 
@@ -51,6 +52,10 @@ alias android-docker-vnc='if ! which vncviewer > /dev/null; then echo "You must 
 
  * `android-docker-destroy` - destroy the stopped container. (add `-f` to stop
    and destroy the running container.)
+
+## Android development mini-tutorial
+
+
 
 ## Building images
 
