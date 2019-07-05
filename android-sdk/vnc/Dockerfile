@@ -4,7 +4,8 @@
 
 # Base image
 # ---------------------------------------------------------------------- #
-FROM plenuspyramis/android-sdk:latest
+ARG BASE_IMAGE=plenuspyramis/android-sdk:latest
+FROM ${BASE_IMAGE}
 
 # Author
 # ---------------------------------------------------------------------- #

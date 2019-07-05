@@ -94,6 +94,8 @@ ARG USER_ID=1000
 RUN apt-get update && \
     apt-get install -y sudo && \
     echo "android ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/99_android_nopasswd && \
-    adduser android --uid ${USER_ID} --gecos GECOS --shell /bin/bash --disabled-password --home /home/android
+    adduser android --uid ${USER_ID} --gecos GECOS --shell /bin/bash --disabled-password --home /home/android && \
+    mkdir /sdk && \
+    chown -R android:android /sdk
 USER android
 CMD ["sudo", "/usr/bin/supervisord"]
