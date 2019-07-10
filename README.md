@@ -4,6 +4,8 @@ This is a fork of [thyrlian/AndroidSDK](https://github.com/thyrlian/AndroidSDK).
 This sets up an environment to develop and build android apps inside of a
 preconfigured docker container.
 
+![mirror](mirror.jpg)
+
 This README is a supplement to the original, which has been copied to
 [README-UPSTREAM.md](README-UPSTREAM.md)
 
@@ -33,11 +35,14 @@ export ANDROID_DOCKER=$HOME/git/vendor/plenuspyramis/AndroidSDK
 export ANDROID_DOCKER_IMAGE=plenuspyramis/android-sdk
 export ANDROID_DOCKER_CONTAINER=android-docker
 export ANDROID_STUDIO_SDK=$HOME/Android/Sdk
-alias android-docker-start="if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --privileged --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_STUDIO_SDK:/sdk:ro -v $ANDROID_DOCKER/gradle_caches:/home/android/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;"
+export ANDROID_DOCKER_EMULATOR_PLATFORM=24
+export ANDROID_DOCKER_EMULATOR_ARCH=x86
+alias android-docker-start='if sudo docker ps -a | grep $ANDROID_DOCKER_CONTAINER > /dev/null; then sudo docker start $ANDROID_DOCKER_CONTAINER; else sudo docker run -d --privileged --name $ANDROID_DOCKER_CONTAINER -v $ANDROID_STUDIO_SDK:/sdk:ro -v $ANDROID_DOCKER/gradle_caches:/home/android/.gradle/caches -p 127.0.0.1:5901:5901 $ANDROID_DOCKER_IMAGE; fi;'
 alias android-docker-stop='sudo docker stop $ANDROID_DOCKER_CONTAINER'
 alias android-docker-destroy='sudo docker rm $ANDROID_DOCKER_CONTAINER'
 alias android-docker-shell='sudo docker exec -it $ANDROID_DOCKER_CONTAINER /bin/bash'
 alias android-docker-vnc='if ! which vncviewer > /dev/null; then echo "You must install vncviewer" && exit 1; else vncviewer 127.0.0.1:1; fi'
+alias android-docker-emulator-config='$ANDROID_STUDIO_SDK/tools/bin/sdkmanager "platform-tools" "platforms;android-$ANDROID_DOCKER_EMULATOR_PLATFORM" "emulator" "system-images;android-$ANDROID_DOCKER_EMULATOR_PLATFORM;default;$ANDROID_DOCKER_EMULATOR_ARCH" && echo "no" | $ANDROID_STUDIO_SDK/tools/bin/avdmanager create avd -n test -k "system-images;android-$ANDROID_DOCKER_EMULATOR_PLATFORM;default;$ANDROID_DOCKER_EMULATOR_ARCH" && echo -e "\nAVD created."'
 ```
 
 Once you have saved `$HOME/.bashrc`, restart your terminal to reload it.
@@ -58,6 +63,15 @@ Once you have saved `$HOME/.bashrc`, restart your terminal to reload it.
 
  * `android-docker-destroy` - destroy the stopped container. (add `-f` to stop
    and destroy the running container.)
+
+## Mini Android Development Tutorial
+
+Download all the things you need to run an emulator:
+
+Run this on your host, to download Android platform 24 for x86:
+
+```
+```
 
 ## Building images
 
